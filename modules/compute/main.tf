@@ -10,6 +10,7 @@ resource "azurerm_network_interface" "frontend_nic" {
   tags = var.tags
 
 
+
   ip_configuration {
     name                          = "internal"
     subnet_id                     = var.frontend_subnet_id
@@ -53,10 +54,6 @@ resource "azurerm_linux_virtual_machine" "frontend_vm" {
   }
 
   tags = var.tags
-
-
-
-
 
 
 }

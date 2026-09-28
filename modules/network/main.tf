@@ -57,7 +57,7 @@ resource "azurerm_network_security_rule" "allow-ssh-frontend" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "22"
-  source_address_prefix       = "*"
+  source_address_prefix       = "14.194.103.150"
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.frontend-nsg.name 
@@ -102,22 +102,24 @@ resource "azurerm_public_ip" "frontend-pip" {
 }
 
 
-resource "azurerm_network_security_rule" "allow-ssh-backend" {
-  name                        = "allow-ssh-backend"
+resource "azurerm_network_security_rule" "backend_ssh" {
+  name                        = "allow-ssh-from-frontend"
   priority                    = 100
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "22"
-  source_address_prefix       = "*"
+  
+  //It only allows traffic from the frontend subnet.
+  # Note the 's' at the end of source_address_prefixes because your variable is a list!
+  source_address_prefixes     = var.vnet_frontend_subnet_address_space
+  
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
-  network_security_group_name = azurerm_network_security_group.backend-nsg.name
-
-
-
+  network_security_group_name = azurerm_network_security_group.backend-nsg.name 
 }
+
 
 resource "azurerm_subnet_network_security_group_association" "backend" {
   subnet_id                 = azurerm_subnet.bsnet.id
@@ -138,6 +140,18 @@ resource "azurerm_public_ip" "backend_pip" {
 
 }
 
+
+resource "azurerm_subnet" "appgw_snet" {
+
+        name =  "snet-appgw"
+        resource_group_name =var.resource_group_name
+         virtual_network_name = azurerm_virtual_network.vnet-main.name
+         address_prefixes = ["10.0.3.0/24"]
+
+    
+    
+
+}
 
 
 

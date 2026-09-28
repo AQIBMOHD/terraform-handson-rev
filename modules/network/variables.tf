@@ -24,3 +24,11 @@ variable "backend_nsg_name" { type = string }
 variable "tags" {
     type = map(string)
 }
+
+variable "appgw_subnet_name"{
+    type = string
+}
+
+variable "appgw_subnet_address_space"{
+    type = list(string)
+}

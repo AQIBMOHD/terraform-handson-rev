@@ -7,3 +7,7 @@ output "backend_subnet_id" {
 output "frontend_vm_ip" {
     value = azurerm_public_ip.frontend-pip.id
 }
+output "appgw_subnet_id"{
+    value = azurerm_subnet.appgw_snet.id
+}
+
